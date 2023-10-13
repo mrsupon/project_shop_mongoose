@@ -9,7 +9,6 @@ const app = express();
 const port = 3000;
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-
 Middleware.init(app);
 Route.init(app); 
 

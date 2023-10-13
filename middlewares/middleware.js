@@ -3,6 +3,7 @@ import methodOverride from "method-override"
 import session from "express-session"
 import {default as connectMongodbSession} from "connect-mongodb-session"
 
+import DbMongoose from "../database/database_mongoose.js"
 import CsrfMiddleware from "./csrfMiddleware.js"
 import AuthMiddleware from "./authMiddleware.js"
 
@@ -12,7 +13,7 @@ class Middleware{
     static init(app){
         const MongodbStore = connectMongodbSession(session);
         const store = new MongodbStore({
-          uri:'mongodb://127.0.0.1:27017/shop',
+          uri:DbMongoose.connectionString,
           collection:'session'
         });
           

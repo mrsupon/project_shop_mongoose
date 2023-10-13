@@ -40,7 +40,7 @@ class SignupController{
                 })
                 .catch( err=> console.log(err));
             }   
-            res.redirect("/signup/create");     
+            res.redirect("/login/create");     
         })
         .catch( err=> console.log(err));
     }    

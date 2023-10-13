@@ -30,8 +30,7 @@ class CartController{
     }
 
     static store(req, res){
-        const productId = req.body.productId;console.log(req.user); 
-        const user = req.user; 
+        const productId = req.body.productId;
         User.findOne({_id: req.session.user._id})
         .then(user=>{
             if(!user.cart._id){  // new cart
