@@ -1,0 +1,53 @@
+<%- include('../../layouts/head.ejs') %>
+
+</head>
+
+<body>
+    <%- include('../../layouts/navigation.ejs') %>
+
+    <div class="container col-sm-12 col-md-9 mt-2">
+        <div class="card  bg-white px-1">  
+        <div class="card-title">
+                <h3 >Cart</h3>
+        </div>       
+        <% if (cartItems.length > 0) { %> 
+            <% let total = 0.0; %>
+            <div class="card-text my-4 border-bottom">
+                <div class="row text-end">
+                    <p class="col-4 text-start" >Product</p> 
+                    <p class="col-2" >Price</p> 
+                    <p class="col-2 " >Qty</p> 
+                    <p class="col-2" >Amount</p>
+                    <p class="col-2 text-start" >Action</p>                            
+                </div>
+            </div>    
+            <% for (let item of cartItems) { %>
+            <% let sum = item.productId.price*item.quantity; total += sum; %>    
+            <div class="card-text">    
+                    <div class="row ">
+                        <p class="col-4" ><%= item.productId.title %></p> 
+                        <p class="col-2 text-end" ><%= item.productId.price %></p> 
+                        <p class="col-2 text-end" ><%= item.quantity %></p> 
+                        <p class="col-2 text-end" ><%= parseFloat(sum).toFixed(2) %> </p>
+                        <form class="col-2" action="/shops/carts?_method=DELETE" method="POST" >
+                            <input type="hidden" name="itemId" value="<%= item._id  %>" >
+                            <button class="btn btn-primary btn-sm" type="submit">Delete</button>                                
+                        </form>                            
+                    </div>
+            </div>        
+            <% } %>
+            <div class="card-text"> 
+                <div class="row text-end" >
+                    <p class="col-2 offset-6" >Total</p> 
+                    <p class="col-2 " ><%=  parseFloat(total).toFixed(2) %></p>
+                    <form class="col-2 text-start" action="/shops/orders/" method="POST"  >
+                        <button class="btn btn-success btn-sm" type="submit">Check Out</button>                                
+                    </form> 
+                </div>
+            </div>
+        <% } else { %>
+            <div class="card-text"><h4>No Products Found!</h4></div>
+        <% } %>
+        </div>
+    </div>
+    <%- include('../../layouts/end.ejs') %>

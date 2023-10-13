@@ -1,0 +1,65 @@
+<%- include('../../layouts/head.ejs') %>
+
+</head>
+
+<body>
+    <%- include('../../layouts/navigation.ejs') %>
+
+    <div class="container col-sm-12 col-md-9 mt-2">
+        <div class="card  bg-white px-1">  
+        <div class="card-title">
+                <h3 >Orders</h3>
+        </div>     
+        <% if (orders.length > 0) { %> 
+            <% let grandTotal = 0.0; %>
+            <% for (let order of orders) { %>
+            <% let total = 0.0; %>
+            <div class="card-text my-4 border-bottom">
+                <div class="row text-end">
+                    <p class="col-4 text-start" >Product</p> 
+                    <p class="col-2" >Price</p> 
+                    <p class="col-2 " >Qty</p> 
+                    <p class="col-2" >Amount</p>
+                    <p class="col-2 text-start" >Action</p>                            
+                </div>
+            </div>    
+            <% for (let orderDetail of order.orderDetails) { %>
+            <% let sum = orderDetail.productId.price*orderDetail.quantity; total += sum;  %>    
+            <div class="card-text">    
+                    <div class="row ">
+                        <p class="col-4" ><%= orderDetail.productId.title %></p> 
+                        <p class="col-2 text-end" ><%= orderDetail.productId.price %></p> 
+                        <p class="col-2 text-end" ><%= orderDetail.quantity %></p> 
+                        <p class="col-2 text-end" ><%= parseFloat(sum).toFixed(2) %> </p>
+                        <form class="col-2" action="/#" method="POST" >
+                               
+                        </form>                            
+                    </div>
+            </div>        
+            <% } %>
+            <div class="card-text border-bottom"> 
+                <div class="row text-end" >
+                    <p class="col-2 offset-6" >Total</p> 
+                    <p class="col-2 " ><%=  parseFloat(total).toFixed(2) %></p>
+                    <% grandTotal+=total; %>
+                    <form class="col-2 text-start" action="/#" method="POST"  >
+                               
+                    </form> 
+                </div>
+            </div>
+            <% } %>
+            <div class="card-text mt-2"> 
+                <div class="row text-end" >
+                    <p class="col-2 offset-6" >Grand Total</p> 
+                    <p class="col-2 " ><%=  parseFloat(grandTotal).toFixed(2) %></p>
+                    <form class="col-2 text-start" action="/#" method="POST"  >
+                        <button class="btn btn-success btn-sm" type="submit">Payment</button>                                
+                    </form> 
+                </div>
+            </div>            
+        <% } else { %>
+            <div class="card-text"><h1>No Products Found!</h1></div>
+        <% } %>
+        </div>
+    </div>
+    <%- include('../../layouts/end.ejs') %>

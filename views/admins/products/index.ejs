@@ -1,0 +1,37 @@
+<%- include('../../layouts/head.ejs') %>
+</head>
+
+<body style="background-color: rgb(241, 245, 249);">
+    <%- include('../../layouts/navigation.ejs') %>
+          
+    <div class="container col-9 ">
+        <% if (products.length > 0) { %>      
+        <div class="row justify-content-center">
+          <% for (let product of products) { %>
+          <!-- Simple card -->
+          <div class="card shadow-none col-md-6 col-lg-6 col-xl-4 border-0 my-2 bg-transparent" >
+              <div class="card-header shadow bg-white">
+                <h4 class="card-title text-center  "><%= product.title %></h4>
+                <div class="row justify-content-center">
+                  <img class="img-fluid" shadow src="<%= product.imageUrl %>" alt="<%= product.title %>">              
+                </div>
+              </div>
+              <div class="card-body shadow bg-white">  
+                <h4 class=" card-title text-center">$<%= parseFloat(product.price).toFixed(2) %></h4>
+                <p class="card-text"><%= product.description %></p>
+              </div>
+              <div class="card-footer shadow bg-white mt-auto d-inline-flex justify-content-center">
+                <button type="button" class="btn btn-primary mx-1 waves-effect waves-light" onclick="(window.location.href='/admins/products/<%= product.id %>/edit')" >Edit</button>
+                <form action="/admins/products/<%= product.id %>?_method=DELETE" method="POST" >
+                  <button type="submit" class="btn btn-primary mx-1 waves-effect waves-light"  >Delete</button>
+                </form>
+              </div>
+          </div>  
+          <% } %>         
+        </div>
+        <% } else { %>
+        <h1>No Products Found!</h1>
+        <% } %>      
+    </div>
+
+<%- include('../../layouts/end.ejs') %> 

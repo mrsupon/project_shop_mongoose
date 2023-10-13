@@ -1,0 +1,68 @@
+<%- include('../layouts/head.ejs') %>
+
+</head>
+
+<body>
+    <%- include('../layouts/navigation.ejs') %>
+
+    <div class="container">
+        <div class="row row-cols-md-2 mt-2 ">
+            <div class="col mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="border p-4 rounded">
+                            <div class="text-center">
+                                <h3 class="">Sign up</h3>
+                                <p>Do have an account ? <a href="/login/create">Sign in here</a>
+                                </p>
+                            </div>
+                            <div class="d-grid">
+                                <a class="btn my-1 shadow-sm btn-white" href="javascript:;"> <span class="d-flex justify-content-center align-items-center">
+                <img class="me-2" src="/assets/images/icons/search.svg" width="16" alt="Image Description">
+                <span>Sign up with Google</span>
+                                    </span>
+                                </a> <a href="javascript:;" class="btn btn-facebook"><i class="bx bxl-facebook"></i>Sign up with Facebook</a>
+                            </div>
+                            <div class="login-separater text-center mb-4"> <span>OR SIGN UP WITH EMAIL</span>
+                                <hr>
+                            </div>
+                            <div class="form-body">
+                                <form class="row g-3" action="/signup" method="POST">
+                                    <div class="col-12">
+                                        <label for="inputEmailAddress" class="form-label">Email Address</label>
+                                        <input type="email" class="form-control" id="inputEmailAddress" name="email" placeholder="Email Address">
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="inputChoosePassword" class="form-label">Enter Password</label>
+                                        <div class="input-group" id="show_hide_password">
+                                            <input type="password" class="form-control border-end-0" id="inputChoosePassword" name="password" value="12345678" placeholder="Enter Password"> <a href="javascript:;" class="input-group-text bg-transparent"><i class="bx bx-hide"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="inputChooseConfirm" class="form-label">Confirm Password</label>
+                                        <div class="input-group" >
+                                            <input type="password" class="form-control border-end-0" id="inputConfirmPassword" name="confirmPassword" value="" placeholder="Confirm Password"> 
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked="">
+                                            <label class="form-check-label" for="flexSwitchCheckChecked">Remember Me</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="d-grid">
+                                            <button type="submit" class="btn btn-primary"><i class="bx bxs-lock-open"></i>Sign up</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end row-->
+    </div>
+
+<%- include('../layouts/end.ejs') %>   
