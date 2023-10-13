@@ -1,6 +1,8 @@
 # project wide
 .DS_Store
 
+package-lock.json
+
 
 # Log
 logs
