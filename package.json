@@ -2,7 +2,7 @@
   "name": "project-express-shop-mongoose",
   "version": "1.0.0",
   "description": "project-express-json-file",
-  "main": "app.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
