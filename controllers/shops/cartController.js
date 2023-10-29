@@ -1,8 +1,5 @@
-import mongoose from "mongoose";
-import Product from "../../models/mongoose/product.js"
-import Cart from "../../models/mongoose/user.js"
 import User from "../../models/mongoose/user.js";
-import session from "express-session"
+
 
 class CartController{
 
@@ -36,7 +33,6 @@ class CartController{
             if(!user.cart._id){  // new cart
                 user.cart = { items:[] } ;//new mongoose.mongo.ObjectId();           
             } 
-            const cartId = user.cart._id ; 
             const itemIndex = user.cart.items.findIndex(item=>{           
                 return item.productId.toString() === productId.toString();
             })
@@ -50,7 +46,6 @@ class CartController{
             res.redirect('/shops/carts'); 
         })
         .catch( err=>console.log(err) ); 
-
     } 
 
     static destroy(req, res){  
@@ -66,3 +61,4 @@ class CartController{
 }
 
 export default CartController;
+

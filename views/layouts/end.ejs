@@ -1,16 +1,50 @@
 
+	
 	<!--end switcher-->
 	<!-- Bootstrap JS -->
 	<script src="/assets/js/bootstrap.bundle.min.js"></script>
+
 	<!--plugins-->
 	<script src="/assets/js/jquery.min.js"></script>
 	<script src="/assets/plugins/simplebar/js/simplebar.min.js"></script>
 	<script src="/assets/plugins/metismenu/js/metisMenu.min.js"></script>
 	<script src="/assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
+	<!--app JS-->
+	<!--<script src="/assets/js/app.js"></script>-->
 	<!--Password show & hide js -->
 	<script src="/assets/js/showAndHidePassword.js"></script>	
-	<!--app JS-->
-	<script src="/assets/js/app.js"></script>
+	<script src="/assets/js/toastr.min.js"></script>
+
+	<script>
+		function showToastr(message){ 
+			toastr.options.closeButton = true;
+			toastr.options.timeOut = 10000000;
+			toastr.options.extendedTimeOut = 2000;
+			toastr.options.progressBar = true;
+			//toastr.options.rtl = true;
+			toastr.options.preventDuplicates= true;
+
+			for(const prop in message){
+				let length = (message[prop].reverse()).length;
+				for(let i = 0; i < length; i++){
+					if(prop === 'success')
+						toastr.options.timeOut = 2000;
+					else
+						toastr.options.timeOut = 10000000;
+					toastr[prop](message[prop][i].replaceAll('/n', '<br/>'));
+				}
+							
+			}			
+		}  
+	</script>
+
+	<% if( (typeof messages !== "undefined") && messages ){%>	
+    <script> 
+		let parsedMessages = JSON.parse('<%- JSON.stringify(messages) %>') ;
+		showToastr(parsedMessages); 
+    </script>
+    <% } %>
+
 </body>
 
 </html>

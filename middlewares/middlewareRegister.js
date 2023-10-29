@@ -6,13 +6,16 @@ import {default as connectMongodbSession} from "connect-mongodb-session"
 import DbMongoose from "../database/database_mongoose.js"
 import CsrfMiddleware from "./csrfMiddleware.js"
 import AuthMiddleware from "./authMiddleware.js"
+import OldInputMiddleware from "./oldInputMiddleware.js"
+import SanitizerMiddleware from "./sanitizerMiddleware.js"
+import flash from "connect-flash"
 
-
-class Middleware{
+class MiddlewareRegister{
 
     static init(app){
+
         const MongodbStore = connectMongodbSession(session);
-        const store = new MongodbStore({
+        const mongodbStore = new MongodbStore({
           uri:DbMongoose.connectionString,
           collection:'session'
         });
@@ -22,10 +25,13 @@ class Middleware{
         app.use(express.static("public")); 
         app.use(express.static("node_modules"));
         app.use(methodOverride('_method'));
-        app.use(session({secret:'my secret', resave:false, saveUninitialized:false, store:store }));
-        app.use((req, res, next)=>CsrfMiddleware.verify(req, res, next));
-        app.use((req, res, next)=>AuthMiddleware.setLocals(req, res, next));  
+        app.use(session({secret:'my secret', resave:false, saveUninitialized:false, store:mongodbStore }));
+        app.use(SanitizerMiddleware.sanitizeReqBody);
+        app.use(CsrfMiddleware.verify);
+        app.use(AuthMiddleware.setLocals);  
+        app.use(OldInputMiddleware.set);
+        app.use(flash());
     }
 }
 
-export default Middleware;
+export default MiddlewareRegister;

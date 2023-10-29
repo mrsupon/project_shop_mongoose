@@ -12,6 +12,8 @@ const userSchema = new Schema({
         type:String,
         required:true
     },
+    resetToken: String,
+    resetTokenExpiration: Date,
     cart:{
         _id:{
             type: mongoose.Types.ObjectId, 

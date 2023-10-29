@@ -7,7 +7,7 @@ class ProductController{
         .then( (products) => {
             res.render('shops/products/index.ejs', {
             products: products ,
-            pageTitle: 'Products in shop',
+            pageTitle: 'All Products',
             path: '/shops/products'
             });
         })
@@ -21,7 +21,7 @@ class ProductController{
             res.render('shops/products/show.ejs', { 
                 products: product ,
                 pageTitle: product.title,
-                path: ''
+                path: '/shops/products/show'
             });
         })
         .catch( err=>console.log(err) );

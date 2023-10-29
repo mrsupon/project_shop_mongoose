@@ -13,7 +13,7 @@
                         <div class="border p-4 rounded">
                             <div class="text-center">
                                 <h3 class="">Sign in</h3>
-                                <p>Don't have an account yet? <a href="/signup/create">Sign up here</a>
+                                <p>Don't have an account yet? <a href="/auth/signup/create">Sign up here</a>
                                 </p>
                             </div>
                             <div class="d-grid">
@@ -27,16 +27,16 @@
                                 <hr>
                             </div>
                             <div class="form-body">
-                                <form class="row g-3" action="/login" method="POST">
+                                <form class="row g-3" action="/auth/login" method="POST">
+                                    <%- csrf() %>
                                     <div class="col-12">
                                         <label for="inputEmailAddress" class="form-label">Email Address</label>
-                                        <%- csrf %>
-                                        <input type="email" class="form-control" id="inputEmailAddress" name="email" placeholder="Email Address">
+                                        <input type="email" class="form-control <%= errorFields.includes('email')?'border-danger':'' %>" id="inputEmailAddress" name="email" placeholder="Email Address" autocomplete="on" value="<%= old.email %>">
                                     </div>
                                     <div class="col-12">
                                         <label for="inputChoosePassword" class="form-label">Enter Password</label>
                                         <div class="input-group" id="show_hide_password">
-                                            <input type="password" class="form-control border-end-0" id="inputChoosePassword" name="password" value="12345678" placeholder="Enter Password"> <a href="javascript:;" class="input-group-text bg-transparent"><i class="bx bx-hide"></i></a>
+                                            <input type="password" class="form-control <%= errorFields.includes('password')?'border-danger':'' %>" id="inputChoosePassword" name="password" autocomplete="on" value="<%= old.password %>" placeholder="Enter Password"> <a href="javascript:;" class="input-group-text bg-transparent"><i class="bx bx-hide"></i></a>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -45,7 +45,9 @@
                                             <label class="form-check-label" for="flexSwitchCheckChecked">Remember Me</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 text-end">	<a href="authentication-forgot-password.html">Forgot Password ?</a>
+                                    <div class="col-md-6 text-end">	
+                                        <a href="authentication-forgot-password.html">Forgot Password ?</a><br>
+                                        <a href="/auth/resetPassword/create">Reset Password ?</a>
                                     </div>
                                     <div class="col-12">
                                         <div class="d-grid">

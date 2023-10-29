@@ -7,7 +7,7 @@ var db = new sequelize(
     process.env.DB_PASSWORD,
     {
         dialect: "mysql",
-        host: process.env.DB_HOST, 
+        host: process.env.DB_HOST,  
         logging: false
     }
 );

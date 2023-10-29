@@ -16,18 +16,25 @@
     "nodemon": "^1.18.3"
   },
   "dependencies": {
+    "ajv": "^8.12.0",
     "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
     "connect-mongodb-session": "^3.1.1",
     "csrf": "^3.1.0",
     "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "express": "^4.16.3",
     "express-session": "^1.17.3",
+    "express-validator": "^7.0.1",
+    "isomorphic-dompurify": "^1.9.0",
     "method-override": "^3.0.0",
     "mongodb": "^6.1.0",
     "mongoose": "^7.6.0",
     "mysql2": "^3.6.1",
-    "sequelize": "^6.33.0"
+    "nodemailer": "^6.9.6",
+    "old-input": "^1.1.0",
+    "sequelize": "^6.33.0",
+    "zod": "^3.22.4"
   },
   "engines": {
     "node": ">=16 <17"

@@ -3,19 +3,18 @@ class AuthMiddleware{
 
     static auth (req, res, next) {  //protect at route
         if(!req.session.isLoggedIn){
-            res.redirect("/login/create");
+            res.redirect("/auth/login/create");
         }
         next();
     }
 
-    static setLocals(req, res, next) {   //protect view 
-                 
-        if(req.session.isLoggedIn){
-            res.locals.auth = req.session.user;       
-        }
+    static setLocals(req, res, next) {   //middleware regist  
+        if(!req.session.isLoggedIn) 
+            res.locals.auth = null;      
         else
-            res.locals.auth = null;
-        return next();
+            res.locals.auth = req.session.user;             
+
+        next();
     }
 }
 
