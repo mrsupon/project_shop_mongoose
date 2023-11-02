@@ -18,7 +18,7 @@
 	<script>
 		function showToastr(message){ 
 			toastr.options.closeButton = true;
-			toastr.options.timeOut = 10000000;
+			toastr.options.timeOut = 5000;
 			toastr.options.extendedTimeOut = 2000;
 			toastr.options.progressBar = true;
 			//toastr.options.rtl = true;
@@ -29,7 +29,7 @@
 				for(let i = 0; i < length; i++){
 					if(prop === 'success')
 						toastr.options.timeOut = 2000;
-					else
+					else if(prop === 'error')
 						toastr.options.timeOut = 10000000;
 					toastr[prop](message[prop][i].replaceAll('/n', '<br/>'));
 				}

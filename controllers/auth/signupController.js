@@ -57,7 +57,7 @@ class SignupController{
                 if( validateResult !== null ){ 
                     req.flash('error', validateResult.errorMessages);
                     req.flash('errorFields', validateResult.errorFields);
-                    return res.redirect("/auth/signup/create");
+                    return res.status(422).redirect("/auth/signup/create");
                 } 
                 else{
                     bcrypt.hash(password,12)
@@ -70,6 +70,7 @@ class SignupController{
                         return user.save();    
                     })
                     .then(result=>{
+                        req.flash('success','Please verify your account in email');
                         res.redirect("/auth/login/create"); 
                         new EMail().send('supon.sup@gmail.com', 'Verify Email', 'emails/test.ejs');                                             
                     })

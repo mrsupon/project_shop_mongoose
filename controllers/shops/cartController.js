@@ -42,8 +42,10 @@ class CartController{
             else{ // pick new product
                 user.cart.items.push({productId:productId,quantity:1});  
             }
-            user.save();
-            res.redirect('/shops/carts'); 
+            return user.save()
+        })            
+        .then(result =>{
+            res.redirect('/shops/carts');             
         })
         .catch( err=>console.log(err) ); 
     } 

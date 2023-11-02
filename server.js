@@ -18,5 +18,8 @@ DbMongoose.connect()
     console.log(`Successfully started server on port ${port}.`);   
     })
 })
-.catch(err => console.log(err)); 
+.catch(err => {
+    console.log(err);
+    res.redirect("/500");
+}); 
 

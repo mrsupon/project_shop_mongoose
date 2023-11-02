@@ -1,6 +1,7 @@
 import Product from "../../models/mongoose/product.js"
 import z from "zod"
 import Utility from "../../utils/utility.js"
+import mongoose from "mongoose"
 
 class ProductController{
 
@@ -25,13 +26,14 @@ class ProductController{
             res.render("admins/products/create.ejs", { 
                 pageTitle: 'Add Product',
                 path: '/admins/products/create',
-                errorFields: req.flash('errorFields'),                
-                messages: req.flash(),
+                errorFields: req.flash('errorFields'),      // red input border active            
+                messages: req.flash(),                      // toastr active
             });       
     }
 
-    static store(req, res){
+    static store( req, res ){
         const data = {};
+        data._id = new mongoose.Types.ObjectId('652fb62b72c4dcbd5a6c5b42');
         data.title = req.body.title.trim();
         data.imageUrl = req.body.imageUrl.trim();
         data.description = req.body.description.trim();
@@ -59,7 +61,7 @@ class ProductController{
         if( validateResult !== null ){ 
             req.flash('error', validateResult.errorMessages);
             req.flash('errorFields', validateResult.errorFields);
-            return res.redirect("/admins/products/create");
+            return res.status(422).redirect("/admins/products/create");
         } 
         ////////////////////////////////// 
 
@@ -69,7 +71,10 @@ class ProductController{
             req.flash('success', 'Add New Product Successfully');
             res.redirect('/admins/products');  
         })
-        .catch( err=>console.log(err) );
+        .catch(err => {
+            console.log(err);
+            res.redirect('/500');  
+        });
 
     }  
 
@@ -82,7 +87,7 @@ class ProductController{
                 req.flash('error', 'Invalid Authorization');
                 return res.redirect('/admins/products');
             }            
-            res.render('admins/products/edit.ejs', { 
+            res.status(422).render('admins/products/edit.ejs', { 
                 products: product ,
                 pageTitle: 'Edit Product',
                 path: '/admins/products/edit',
@@ -129,7 +134,7 @@ class ProductController{
             if( validateResult !== null ){ 
                 req.flash('error', validateResult.errorMessages);
                 req.flash('errorFields', validateResult.errorFields);
-                return res.render('admins/products/edit.ejs', { 
+                return res.status(422).render('admins/products/edit.ejs', { 
                     products: product ,
                     pageTitle: 'Edit Product',
                     path: '/admins/products/edit',
@@ -142,7 +147,7 @@ class ProductController{
         })    
         .then( result =>{
             req.flash('success', 'Updated Product Successfully');
-            return res.redirect("/admins/products");            
+            res.redirect("/admins/products");            
         })
         .catch( err=>console.log(err) );  
     } 
@@ -162,7 +167,7 @@ class ProductController{
         Product.deleteOne({_id: productId, userId: req.session.user._id})
         .then( result => {
             req.flash('success', 'Deleted Product Successfully');
-            return res.redirect("/admins/products");            
+            res.redirect("/admins/products");            
         })
         .catch( err=>console.log(err) );
     } 

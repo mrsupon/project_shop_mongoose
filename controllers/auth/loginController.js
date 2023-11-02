@@ -51,7 +51,7 @@ class LoginController{
                 if( validateResult !== null ){ 
                     req.flash('error', validateResult.errorMessages);
                     req.flash('errorFields', validateResult.errorFields);
-                    return res.redirect("/auth/login/create");
+                    return res.status(422).redirect("/auth/login/create");
                 } 
 
                 //     else{

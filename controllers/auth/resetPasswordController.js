@@ -23,7 +23,7 @@ class ResetPasswordController{
         crypto.randomBytes(32, (err, buffer)=>{
             if(err){
                 console.log(err);
-                return res.redirect('/auth/resetPassword/create');
+                return res.status(422).redirect('/auth/resetPassword/create');
             }
             const token = buffer.toString('hex');
             const data ={ resetToken: token, host: req.headers.host };
@@ -31,13 +31,14 @@ class ResetPasswordController{
             .then( user => {
                 if(!user){
                     req.flash('error','No account with that email found.');
-                    return res.redirect('/auth/resetPassword/create')
+                    return res.status(422).redirect('/auth/resetPassword/create')
                 }
                 user.resetToken = token;
                 user.resetTokenExpiration = Date.now() + (1*3600000);
                 return user.save();
             } )
             .then(result => {
+                req.flash('success','Please activate reset password in email');
                 res.redirect("/auth/login/create");  
                 new EMail().send('supon.sup@gmail.com', 'Verify Email', 'emails/resetPassword.ejs', data); 
             } )

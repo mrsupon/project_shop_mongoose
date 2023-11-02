@@ -31,6 +31,10 @@ class MiddlewareRegister{
         app.use(AuthMiddleware.setLocals);  
         app.use(OldInputMiddleware.set);
         app.use(flash());
+        app.use((error, req, res, next)=>{
+          // res.status(error.httpStatusCode).render(...);
+          res.redirect('/500');
+        });
     }
 }
 

@@ -33,9 +33,11 @@ class OrderController{
                 newOrder.save()
                 .then(result=>{
                     user.cart = {};
-                    user.save();
+                    return user.save();
+                }) 
+                .then( result =>{
                     res.redirect('/shops/orders');
-                })
+                })                
                 .catch( err=>console.log(err) );
             }                
         })
