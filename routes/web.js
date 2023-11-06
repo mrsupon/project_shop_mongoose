@@ -11,8 +11,9 @@ class Route{
             AdminRoute.init(app);
             ShopRoute.init(app);
             
-            app.get("/500",AuthMiddleware.auth, ErrorController.showStatus500);
-            app.all("*", AuthMiddleware.auth, ErrorController.showStatus404);   
+            app.get("/500",AuthMiddleware.auth, ErrorController.show500);
+            //app.get("/404",AuthMiddleware.auth, ErrorController.show404);
+            app.all("*", AuthMiddleware.auth, ErrorController.show404);    
         }
 }
 

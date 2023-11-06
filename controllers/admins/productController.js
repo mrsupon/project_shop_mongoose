@@ -1,12 +1,16 @@
 import Product from "../../models/mongoose/product.js"
 import z from "zod"
 import Utility from "../../utils/utility.js"
-import mongoose from "mongoose"
+import Pagination from "../../utils/pagination.js"
 
 class ProductController{
 
     static index(req, res){
-        Product.find()  // if alot of data use .cursor().next() to do pagination
+        const currentPage = parseInt(req.query.page||1) ; 
+        const itemsPerPage = 3;
+        const pagination = new Pagination();
+        pagination.getResultSet(Product, itemsPerPage, currentPage)
+        //Product.find()  // if alot of data use .cursor().next() to do pagination
         //.select('title description price imageUrl -_id')
         //.populate('userId', 'email password')
         .then( (products) => { 
@@ -16,6 +20,7 @@ class ProductController{
             path: '/admins/products',
             errorFields: req.flash('errorFields'),                
             messages: req.flash(),
+            pagination: pagination
             });
         })
         .catch( err=>console.log(err) );
@@ -32,10 +37,14 @@ class ProductController{
     }
 
     static store( req, res ){
+        const image = req.file;   
+        if(!image){  
+            req.flash('error', 'Attached file is not .png .jpg .jpeg');
+            return res.status(422).redirect("/admins/products/create");            
+        }       
         const data = {};
-        data._id = new mongoose.Types.ObjectId('652fb62b72c4dcbd5a6c5b42');
         data.title = req.body.title.trim();
-        data.imageUrl = req.body.imageUrl.trim();
+        data.imageUrl = image.filename;
         data.description = req.body.description.trim();
         data.price = parseFloat(req.body.price); 
         data.userId = req.session.user._id;
@@ -46,10 +55,10 @@ class ProductController{
                                 required_error: "Title is required",
                                 invalid_type_error: "Title must be a string",
                             }).min(5,'Title should be /n at least 5 character(s)').max(256,'Title should be /n at most 256 character(s)'), //.regex(new RegExp('^[a-zA-Z0-9]*$'), 'Title should be /n alphanumeric'),
-                    imageUrl: z.string({
+                    imageUrl: z.string({ 
                                 required_error: "ImageUrl is required",
-                                invalid_type_error: "ImageUrl must be URL format",
-                            }).url('ImageUrl should be /n URL format'),//.regex(new RegExp('/^\w+$/'),'Password should be /n an alphanumeric' ),//.regex(new RegExp('(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}'), 'Password should be /n contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters'),
+                                invalid_type_error: "ImageUrl must be string",
+                            }),//.url('ImageUrl should be /n URL format'),//.regex(new RegExp('/^\w+$/'),'Password should be /n an alphanumeric' ),//.regex(new RegExp('(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}'), 'Password should be /n contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters'),
                     price: z.coerce.number({
                                 required_error: "Price is required",
                                 invalid_type_error: "Price must be a number",
@@ -85,9 +94,9 @@ class ProductController{
         .then((product)=>{  
             if(product.userId.toString() !== (req.session.user._id).toString() ){   //Authorization
                 req.flash('error', 'Invalid Authorization');
-                return res.redirect('/admins/products');
+                return res.status(401).redirect('/admins/products');
             }            
-            res.status(422).render('admins/products/edit.ejs', { 
+            res.render('admins/products/edit.ejs', { 
                 products: product ,
                 pageTitle: 'Edit Product',
                 path: '/admins/products/edit',
@@ -105,12 +114,17 @@ class ProductController{
         .then((product)=>{ 
             if(product.userId.toString() !== (req.session.user._id).toString() ){   //Authorization
                 req.flash('error', 'Invalid Authorization');
-                return res.redirect('/admins/products');
+                return res.status(401).redirect('/admins/products');
             } 
-            product.title = req.body.title.trim();
-            product.imageUrl = req.body.imageUrl.trim();
+            product.title = req.body.title.trim();    
             product.description = req.body.description.trim();
-            product.price = parseFloat(req.body.price); 
+            product.price = parseFloat(req.body.price);
+            const image = req.file;
+            if(image){
+                Utility.deleteFile('public/assets/backEnd/images/upload/products/'+product.imageUrl);
+                product.imageUrl = image.filename;
+            }
+                
             // Zod Input Validation////////// 
             const schema = z.object({
                 data: z.object({ 
@@ -120,8 +134,8 @@ class ProductController{
                                 }).min(5,'Title should be /n at least 5 character(s)').max(256,'Title should be /n at most 256 character(s)'), //.regex(new RegExp('^[a-zA-Z0-9]*$'), 'Title should be /n alphanumeric'),
                         imageUrl: z.string({
                                     required_error: "ImageUrl is required",
-                                    invalid_type_error: "ImageUrl must be URL format",
-                                }).url('ImageUrl should be /n URL format'),//.regex(new RegExp('/^\w+$/'),'Password should be /n an alphanumeric' ),//.regex(new RegExp('(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}'), 'Password should be /n contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters'),
+                                    invalid_type_error: "ImageUrl must be string",
+                                }), //.url('ImageUrl should be /n URL format'),//.regex(new RegExp('/^\w+$/'),'Password should be /n an alphanumeric' ),//.regex(new RegExp('(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}'), 'Password should be /n contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters'),
                         price: z.coerce.number({
                                     required_error: "Price is required",
                                     invalid_type_error: "Price must be a number",
@@ -161,15 +175,20 @@ class ProductController{
                 req.flash('error', 'Invalid Authorization');
                 return res.redirect('/admins/products');
             } 
+            if(!product){
+                req.flash('error', 'Product was not found.');
+                return res.redirect('/admins/products');
+            }
+            Utility.deleteFile('public/assets/backEnd/images/upload/products/'+product.imageUrl);
+            Product.deleteOne({_id: productId, userId: req.session.user._id})
+            .then( result => {
+                req.flash('success', 'Deleted Product Successfully');
+                res.redirect("/admins/products");            
+            })
+            .catch( err=>console.log(err) );
         })
         .catch( err=>console.log(err) );
 
-        Product.deleteOne({_id: productId, userId: req.session.user._id})
-        .then( result => {
-            req.flash('success', 'Deleted Product Successfully');
-            res.redirect("/admins/products");            
-        })
-        .catch( err=>console.log(err) );
     } 
 
     

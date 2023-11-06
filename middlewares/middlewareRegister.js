@@ -9,6 +9,7 @@ import AuthMiddleware from "./authMiddleware.js"
 import OldInputMiddleware from "./oldInputMiddleware.js"
 import SanitizerMiddleware from "./sanitizerMiddleware.js"
 import flash from "connect-flash"
+import multer from "multer"
 
 class MiddlewareRegister{
 
@@ -19,10 +20,29 @@ class MiddlewareRegister{
           uri:DbMongoose.connectionString,
           collection:'session'
         });
+
+        const fileStorage = multer.diskStorage({
+          destination: (req, file, cb) => {
+            cb(null, 'public/assets/backEnd/images/upload/products');
+          },
+          filename: (req, file, cb) => {
+            cb(null, Date.now() + '-' + file.originalname);
+          }
+        });
+        const fileFilter = (req, file, cb)=>{
+          if( file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg' ){
+            cb(null, true );
+          }
+          else{
+            cb(null, false );
+          }
+        };
           
 
         app.use(express.urlencoded({ extended: true })); 
+        app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
         app.use(express.static("public")); 
+        app.use("/public", express.static("public/assets/backEnd/images/upload/products"));        
         app.use(express.static("node_modules"));
         app.use(methodOverride('_method'));
         app.use(session({secret:'my secret', resave:false, saveUninitialized:false, store:mongodbStore }));

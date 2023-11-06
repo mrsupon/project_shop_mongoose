@@ -1,6 +1,7 @@
 
 class OldInputMiddleware{
     static _old = {}; 
+    static route = '';
 
     static set (req, res, next) { 
         if( req.method==="POST" && (req.body !== null) ){
@@ -11,16 +12,23 @@ class OldInputMiddleware{
             //     }        
         }  
         
-        if( req.method==="GET" )
-            res.locals.old = OldInputMiddleware._old;
-
-              
+        if( req.method==="GET" ){ 
+            if( OldInputMiddleware.route===(req.baseUrl + req.path)) {
+                res.locals.old = OldInputMiddleware._old;   
+            }    
+            else{
+                res.locals.old = {};
+                OldInputMiddleware.route = (req.baseUrl + req.path);
+            }
+                
+        }
+                
         // res.locals.old = (key)=>{
         //     let data = OldInputMiddleware._old[key]||"" ; 
         //     OldInputMiddleware._old[key] = "";
         //     return data ;
         // }        
-        next();
+        next(); 
     }
 
     static clear () { 

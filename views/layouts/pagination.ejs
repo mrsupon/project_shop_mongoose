@@ -1,0 +1,17 @@
+<nav aria-label="Page navigation example" class="row mt-3" >
+    <ul class="pagination pagination-sm justify-content-center">
+      <li class="page-item <%= (pagination.hasPrevious)? '': 'disabled' %>"><a class="page-link" tabindex="<%= (pagination.hasPrevious)? '': '-1' %>" href="<%= path %>?page=<%= (pagination.hasPrevious)? pagination.previousPage: pagination.firstPage %>">Previous</a>
+      </li>              
+    <% for(let i=1; i<=pagination.lastPage; i++){ %>
+      <li class="page-item <%= (pagination.currentPage === i)?'active':'' %> " >
+        <% if((pagination.currentPage === i)) {%>
+          <span class="page-link sr-only"><%= i %></span>
+        <% } else { %>
+          <a class="page-link"  href="<%= path %>?page=<%= i %> " ><%= i %></a>
+        <% } %>
+      </li>
+    <% } %>
+    <li class="page-item <%= (pagination.hasNext)? '': 'disabled' %>"><a class="page-link" tabindex="<%= (pagination.hasNext)? '': '-1' %>" href="<%= path %>?page=<%= (pagination.hasNext)? pagination.nextPage: pagination.lastPage %>">Next</a>
+      </li> 
+    </ul>
+</nav> 

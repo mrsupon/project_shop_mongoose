@@ -14,46 +14,52 @@
             <% let grandTotal = 0.0; %>
             <% for (let order of orders) { %>
             <% let total = 0.0; %>
-            <div class="card-text my-4 border-bottom">
-                <div class="row text-end">
-                    <p class="col-4 text-start" >Product</p> 
-                    <p class="col-2" >Price</p> 
-                    <p class="col-2 " >Qty</p> 
-                    <p class="col-2" >Amount</p>
-                    <p class="col-2 text-start" >Action</p>                            
+            <div class="row">
+                <p class="fw-bold mt-4 mb-0 py-0">Order# <%= order._id %></p>
+            </div>            
+            <div class="card-text my-0 border">
+
+                <div class="row text-end " style="height:30px;">
+                    <p class="col-4 my-0 py-0 text-start" >Product</p> 
+                    <p class="col-2 my-0 py-0" >Price</p> 
+                    <p class="col-2 my-0 py-0" >Qty</p> 
+                    <p class="col-2 my-0 py-0" >Amount</p>
+                    <p class="col-2 my-0 py-0 text-start" >Action</p>                            
                 </div>
             </div>    
             <% for (let orderDetail of order.orderDetails) { %>
             <% let sum = orderDetail.productId.price*orderDetail.quantity; total += sum;  %>    
             <div class="card-text">    
-                    <div class="row ">
-                        <p class="col-4" ><%= orderDetail.productId.title %></p> 
-                        <p class="col-2 text-end" ><%= orderDetail.productId.price %></p> 
-                        <p class="col-2 text-end" ><%= orderDetail.quantity %></p> 
-                        <p class="col-2 text-end" ><%= parseFloat(sum).toFixed(2) %> </p>
-                        <form class="col-2" action="/#" method="POST" >
+                    <div class="row " style="height:25px;">
+                        <p class="col-4 my-0 py-0 " ><%= orderDetail.productId.title %></p> 
+                        <p class="col-2 my-0 py-0 text-end" ><%= orderDetail.productId.price %></p> 
+                        <p class="col-2 my-0 py-0 text-end" ><%= orderDetail.quantity %></p> 
+                        <p class="col-2 my-0 py-0 text-end" ><%= parseFloat(sum).toFixed(2) %> </p>
+                        <form class="col-2 my-0 py-0 " action="/#" method="POST" >
                                
                         </form>                            
                     </div>
             </div>        
             <% } %>
-            <div class="card-text border-bottom"> 
+            <div class="card-text border"> 
                 <div class="row text-end" >
-                    <p class="col-2 offset-6" >Total</p> 
-                    <p class="col-2 " ><%=  parseFloat(total).toFixed(2) %></p>
-                    <% grandTotal+=total; %>
-                    <form class="col-2 text-start" action="/#" method="POST"  >
-                               
-                    </form> 
+                    <p class="col-4 my-0 py-0 " > </p>
+                    <p class="col-2 my-0 py-0 " > </p>
+                    <p class="col-2 my-0 py-0 " >Total</p> 
+                    <p class="col-2 my-0 py-0 " ><%=  parseFloat(total).toFixed(2) %></p>
+                    <div class="col-2 my-0 py-0 text-start"  >
+                        <button type="button" class="btn-sm btn-primary waves-effect waves-light"  onclick="(window.location.href='/shops/invoices/<%= order._id %>')" >invoice</button>
+                    </div>
                 </div>
             </div>
+            <% grandTotal+=total; %>
             <% } %>
             <div class="card-text mt-2"> 
                 <div class="row text-end" >
                     <p class="col-2 offset-6" >Grand Total</p> 
                     <p class="col-2 " ><%=  parseFloat(grandTotal).toFixed(2) %></p>
                     <form class="col-2 text-start" action="/#" method="POST"  >
-                        <button class="btn btn-success btn-sm" type="submit">Payment</button>                                
+                        <!-- <button class="btn btn-success btn-sm" type="submit">Payment</button> -->                              
                     </form> 
                 </div>
             </div>            

@@ -1,14 +1,19 @@
 import Product from "../../models/mongoose/product.js";
+import Pagination from "../../utils/pagination.js";
 
 class ProductController{
 
     static index(req, res){
-        Product.find()
+        const currentPage = parseInt(req.query.page||1) ; 
+        const itemsPerPage = 3;
+        const pagination = new Pagination();
+        pagination.getResultSet(Product, itemsPerPage, currentPage)
         .then( (products) => {
             res.render('shops/products/index.ejs', {
             products: products ,
             pageTitle: 'All Products',
-            path: '/shops/products'
+            path: '/shops/products',
+            pagination: pagination
             });
         })
         .catch( err=>console.log(err) );

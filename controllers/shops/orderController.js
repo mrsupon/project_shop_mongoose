@@ -1,6 +1,7 @@
 import User from "../../models/mongoose/user.js"
 import Order from "../../models/mongoose/order.js"
 
+
 class OrderController{
 
     static index(req, res){ 
@@ -18,8 +19,12 @@ class OrderController{
         } 
     }
 
+    static show(req, res){ 
+
+    }
+
     static store(req, res){ 
-        User.findOne({_id: req.session.user._id})
+        User.findOne({_id: req.session.user._id}) 
         .then(user=>{
             if(user){
                 // const cartItems = req.user.cart.items;  // orderDetail._id like as cart.item._id
