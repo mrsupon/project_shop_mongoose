@@ -1,29 +1,23 @@
-import ProductController from "../controllers/shops/productController.js";
-import CartController from "../controllers/shops/cartController.js";
-import OrderController from "../controllers/shops/orderController.js";
-import InvoiceController from "../controllers/shops/invoiceController.js";
-import ShopController from "../controllers/shops/shopController.js";
-import AuthMiddleware from "../middlewares/authMiddleware.js";
+import express from 'express';
 
+import ProductController from '../controllers/shops/productController.js';
+import CartController from '../controllers/shops/cartController.js';
+import OrderController from '../controllers/shops/orderController.js';
+import InvoiceController from '../controllers/shops/invoiceController.js';
+import AuthMiddleware from '../middlewares/authMiddleware.js';
 
-class ShopRoute{
-    static init(app){
+const ShopRoute = express.Router();
 
-        app.get("/",ShopController.index);
+ShopRoute.get('/products', ProductController.index);
+ShopRoute.get('/products/:id', ProductController.show);
 
-        app.get("/shops/products",ProductController.index);
-        app.get("/shops/products/:id",ProductController.show);
+ShopRoute.get('/carts', AuthMiddleware.auth, CartController.index);
+ShopRoute.post('/carts', AuthMiddleware.auth, CartController.store);
+ShopRoute.delete('/carts', AuthMiddleware.auth, CartController.destroy);
 
-        app.get("/shops/carts",AuthMiddleware.auth, CartController.index); 
-        app.post("/shops/carts",AuthMiddleware.auth, CartController.store); 
-        app.delete("/shops/carts",AuthMiddleware.auth, CartController.destroy); 
+ShopRoute.get('/orders', AuthMiddleware.auth, OrderController.index);
+ShopRoute.post('/orders', AuthMiddleware.auth, OrderController.store);
 
-        app.get("/shops/orders",AuthMiddleware.auth, OrderController.index); 
-        app.post("/shops/orders",AuthMiddleware.auth, OrderController.store);  
-        
-        app.get("/shops/invoices/:id",AuthMiddleware.auth, InvoiceController.show);       
-    }
-}
+ShopRoute.get('/invoices/:id', AuthMiddleware.auth, InvoiceController.show);
 
-
-export default ShopRoute ;
+export default ShopRoute;

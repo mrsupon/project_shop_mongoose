@@ -1,30 +1,24 @@
+import express from 'express';
+import CsrfMiddleware from '../middlewares/csrfMiddleware.js';
+import LoginController from '../controllers/auth/loginController.js';
+import SignupController from '../controllers/auth/signupController.js';
+import ResetPasswordController from '../controllers/auth/resetPasswordController.js';
+import { checkSchema } from 'express-validator';
+import ValidatorSchema from '../validators/validatorSchema.js';
+import validatorMiddleware from '../middlewares/validatorMiddleware.js';
 
-import LoginController from "../controllers/auth/loginController.js"
-import SignupController from "../controllers/auth/signupController.js"
-import ResetPasswordController from "../controllers/auth/resetPasswordController.js"
+const AuthRoute = express.Router();
 
+AuthRoute.get('/login/create', LoginController.create);
+AuthRoute.post('/login', [CsrfMiddleware.csrf, validatorMiddleware.login], LoginController.store);
+AuthRoute.delete('/logout', LoginController.destroy);
 
+AuthRoute.get('/signup/create', SignupController.create);
+AuthRoute.post('/signup', checkSchema(ValidatorSchema.signup), SignupController.store);
 
-import CsrfMiddleware from "../middlewares/csrfMiddleware.js";
+AuthRoute.get('/resetPassword/create', ResetPasswordController.create);
+AuthRoute.post('/resetPassword', CsrfMiddleware.csrf, ResetPasswordController.store);
+AuthRoute.get('/resetPassword/:token/edit', ResetPasswordController.edit);
+AuthRoute.put('/resetPassword/:token', CsrfMiddleware.csrf, ResetPasswordController.update);
 
-class AuthRoute{
-        static init(app){
-
-            app.get("/auth/login/create", LoginController.create);
-            app.post("/auth/login", CsrfMiddleware.csrf, LoginController.store); 
-            app.delete("/auth/logout", LoginController.destroy);
-
-            app.get("/auth/signup/create", SignupController.create);            
-            app.post("/auth/signup", SignupController.store);   
-
-            app.get("/auth/resetPassword/create", ResetPasswordController.create); 
-            app.post("/auth/resetPassword", CsrfMiddleware.csrf, ResetPasswordController.store); 
-            app.get("/auth/resetPassword/:token/edit", ResetPasswordController.edit); 
-            app.put("/auth/resetPassword/:token",CsrfMiddleware.csrf, ResetPasswordController.update);
-
-        }
-}
-
-
-export default AuthRoute ;
- 
+export default AuthRoute;

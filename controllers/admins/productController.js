@@ -4,12 +4,12 @@ import Utility from "../../utils/utility.js"
 import Pagination from "../../utils/pagination.js"
 
 class ProductController{
+    static pagination = new Pagination();
 
     static index(req, res){
         const currentPage = parseInt(req.query.page||1) ; 
         const itemsPerPage = 3;
-        const pagination = new Pagination();
-        pagination.getResultSet(Product, itemsPerPage, currentPage)
+        ProductController.pagination.getResultSet(Product, itemsPerPage, currentPage)
         //Product.find()  // if alot of data use .cursor().next() to do pagination
         //.select('title description price imageUrl -_id')
         //.populate('userId', 'email password')
@@ -20,7 +20,7 @@ class ProductController{
             path: '/admins/products',
             errorFields: req.flash('errorFields'),                
             messages: req.flash(),
-            pagination: pagination
+            pagination: ProductController.pagination
             });
         })
         .catch( err=>console.log(err) );
@@ -73,7 +73,6 @@ class ProductController{
             return res.status(422).redirect("/admins/products/create");
         } 
         ////////////////////////////////// 
-
         const product = new Product(data);
         product.save()
         .then( result=>{
@@ -109,7 +108,6 @@ class ProductController{
 
     static update(req, res){
         const productId = req.params.id ;
- 
         Product.findById(productId)
         .then((product)=>{ 
             if(product.userId.toString() !== (req.session.user._id).toString() ){   //Authorization
@@ -119,11 +117,7 @@ class ProductController{
             product.title = req.body.title.trim();    
             product.description = req.body.description.trim();
             product.price = parseFloat(req.body.price);
-            const image = req.file;
-            if(image){
-                Utility.deleteFile('public/assets/backEnd/images/upload/products/'+product.imageUrl);
-                product.imageUrl = image.filename;
-            }
+
                 
             // Zod Input Validation////////// 
             const schema = z.object({
@@ -156,12 +150,17 @@ class ProductController{
                     messages: req.flash(),
                 });
             }
-            //////////////////////////////////  
+            //////////////////////////////////     
+            const image = req.file;
+            if(image){
+                Utility.deleteFile('public/assets/backEnd/images/upload/products/'+product.imageUrl);
+                product.imageUrl = image.filename;
+            }                       
             return product.save();
         })    
         .then( result =>{
             req.flash('success', 'Updated Product Successfully');
-            res.redirect("/admins/products");            
+            res.redirect("/admins/products?page="+ProductController.pagination.currentPage);            
         })
         .catch( err=>console.log(err) );  
     } 
